@@ -7,12 +7,20 @@
 ## 材料:
 
 - [力扣](https://leetcode.cn/) 刷题
+   
+   刷题400道以上, 建议用 `Python` , 提高效率, 根据题单快速刷, 每天十多道.
+   
+   推荐: [https://labuladong.github.io/algo/home/](https://labuladong.github.io/algo/home/)
 
-- [hit-alibaba-iOS](https://hit-alibaba.github.io/interview/iOS/) 首选材料, iOS部分都过一遍
+- [hit-alibaba-iOS](https://hit-alibaba.github.io/interview/iOS/) 首选材料
 
-- [CS-Note](http://www.cyc2018.xyz/) 计算机基础, 过一遍
+    iOS部分都过一遍, 基本满足绝大部分面试的 `objc` 部分的问.
 
-- [io-wiki](https://oi-wiki.org/graph/bfs/) 很不错的IO网站,optional
+- [CS-Note](http://www.cyc2018.xyz/) 计算机基础
+
+    过一遍, 社招看看常考的就行。面到一些leader面时, 容易考底层知识, 进程调度等。
+
+- [io-wiki](https://oi-wiki.org/graph/bfs/) 很不错的IO网站, [Optional]
 
 - [iOS 面试八股文](https://baguwen.iosprogrammer.tech/docs/ios/8-threading.html) 作为补充
 
