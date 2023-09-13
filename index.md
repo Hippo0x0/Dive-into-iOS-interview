@@ -18,7 +18,7 @@
 
 - [hit-alibaba-iOS](https://hit-alibaba.github.io/interview/iOS/) 首选材料
 
-    iOS部分都过一遍, 基本满足绝大部分面试的 `objc` 部分的问.
+    iOS部分都过一遍, 基本满足绝大部分面试的 `objc` 部分的问题.
 
 - [CS-Note](http://www.cyc2018.xyz/) 计算机基础
 
