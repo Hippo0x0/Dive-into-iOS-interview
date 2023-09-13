@@ -22,7 +22,7 @@ title: Dive-into-iOS-interview
 email: hippo0x0@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
   最近面试的一些记录
-baseurl: "" # the subpath of your site, e.g. /blog
+baseurl: "/Dive-into-iOS-interview" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: hippo0x0
 github_username:  hippo0x0
