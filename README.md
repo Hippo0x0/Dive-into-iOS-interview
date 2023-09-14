@@ -1512,7 +1512,7 @@ class Solution:
                 matrix[i][j], matrix[n - 1 - i][j] = matrix[n - 1 - i][j] , matrix[i][j]
 
         for i in range(n):
-            for j in range(i): # 主力是i, 如果到n， 会翻转多次
+            for j in range(i): # 注意是i, 如果到n， 会翻转多次
                 matrix[i][j], matrix[j][i] = matrix[j][i] , matrix[i][j]
 
         # 拷贝的方式
