@@ -4,6 +4,10 @@
 
 周期上, 快的话一个月，慢的话两个月。
 
+第一周可以一天 `1` 面，或者一天 `2` 面。第二周第三周一天 `3` 面，加上HR面可以到 `4` 面，第四周开始减少。
+
+市场情况: 好的时候可以密集面试, 基本还是大厂需求多. 市场疲软的时候, 多刷题吧🐶.
+
 ## 材料:
 
 - [力扣](https://leetcode.cn/) 刷题
@@ -3779,3 +3783,11 @@ class LRUCache:
 - [Cracking the Coding Interview](https://www.crackingthecodinginterview.com/)
 
 - [力扣加加](https://leetcode-solution-leetcode-pp.gitbook.io/leetcode-solution/thinkings/heap)
+
+- [深入理解 Objective-C：方法缓存](https://tech.meituan.com/2015/08/12/deep-understanding-object-c-of-method-caching.html)
+
+## 更新指令
+
+```
+bundle exec jekyll build -d docs
+```
