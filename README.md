@@ -217,7 +217,7 @@ class DiningPhilosophers:
             putLeftFork()
             putRightFork()
 
-""" 奇数先拿做， 偶数先拿右
+""" 奇数先拿左， 偶数先拿右
 from threading import Lock
 class DiningPhilosophers:
 
