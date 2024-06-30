@@ -476,6 +476,32 @@ class Solution:
 
 ### 自定义比较函数
 
+[80. 删除有序数组中的重复项 II](https://leetcode.cn/problems/remove-duplicates-from-sorted-array-ii/description/?envType=study-plan-v2&envId=top-interview-150)
+
+```python
+class Solution:
+    # 快慢指针
+    def removeDuplicates(self, nums: List[int]) -> int:
+        n = len(nums)
+        slow = 2
+        fast = 2
+        while fast < n:
+            if nums[slow - 2] != nums[fast]:
+                nums[slow] = nums[fast]
+                slow += 1
+            fast += 1
+        return slow
+
+    def removeDuplicates2(self, nums: List[int]) -> int:
+        left = 0
+        for num in nums:
+            # 因为有序，第三个数要么比left-2大，要么相等
+            if left < 2 or num > nums[left - 2]:
+                nums[left] = num
+                left += 1
+        return left
+```
+
 [剑指 Offer 45. 把数组排成最小的数](https://leetcode.cn/problems/ba-shu-zu-pai-cheng-zui-xiao-de-shu-lcof/)
 
 ```python
