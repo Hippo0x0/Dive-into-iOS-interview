@@ -291,6 +291,23 @@ class DiningPhilosophers:
 
 ## 字符串
 
+[14. 最长公共前缀](https://leetcode.cn/problems/longest-common-prefix/?envType=study-plan-v2&envId=top-interview-150)
+
+```python
+class Solution:
+    def longestCommonPrefix(self, strs: List[str]) -> str:
+        if not strs:
+            return ""
+        s = strs[0]  # 随便找一个，逐个看看
+        for i, c in enumerate(s):
+            for t in strs[1:]:
+                if i < len(t) and t[i] == c:
+                    continue
+                else:
+                    return s[:i]
+        return s
+```
+
 [面试题 01.09. 字符串轮转](https://leetcode.cn/problems/string-rotation-lcci/)
 
 ```python
@@ -299,6 +316,68 @@ class Solution:
         if len(s1) != len(s2):
             return False
         return (s1 + s1).find(s2) != -1  # 这个还挺有意思的
+```
+[13. 罗马数字转整数](https://leetcode.cn/problems/roman-to-integer/description/?envType=study-plan-v2&envId=top-interview-150)
+```python
+class Solution:
+        SYMBOL_VALUES = {
+        'I': 1,
+        'V': 5,
+        'X': 10,
+        'L': 50,
+        'C': 100,
+        'D': 500,
+        'M': 1000,
+    }
+
+    def romanToInt(self, s: str) -> int:
+        ans = 0
+        n = len(s)
+        for i, ch in enumerate(s):
+            value = Solution.SYMBOL_VALUES[ch]
+            if i < n - 1 and value < Solution.SYMBOL_VALUES[s[i + 1]]: # IV是4， 小的数字在左边的情况下，就减去这个数值
+                ans -= value
+            else:
+                ans += value
+        return ans
+```
+[12. 整数转罗马数字](https://leetcode.cn/problems/integer-to-roman/description/?envType=study-plan-v2&envId=top-interview-150)
+
+```python
+class Solution:
+    def intToRoman(self, num: int) -> str:
+        #  m = {'I' : 1, 'IV' : 4, 'V' : 5, 'IX' : 9, 'X' : 10, 'XL' : 40, 'L' : 50, 'XC' : 90, 'C' : 100, 'CD' : 400, 'D' : 500, 'CM' : 900, 'M' : 1000}
+        m = {1 : 'I', 4 : 'IV', 5 : 'V', 9 : 'IX', 10 : 'X', 40 : 'XL', 50 : 'L', 90 : 'XC', 100 : 'C',  400 : 'CD', 500 : 'D', 900 : 'CM', 1000 : 'M'}
+        k = list(m.keys())
+        k.reverse()
+        rst = ""
+        i = 0
+        while num:
+            v = k[i]
+            if num // v: # 多次整除
+                rst = rst + m[v]
+                num -= v
+            else:
+                i += 1
+        return rst
+```
+
+[58. 最后一个单词的长度](https://leetcode.cn/problems/length-of-last-word/description/?envType=study-plan-v2&envId=top-interview-150)
+
+```python
+class Solution:
+    def lengthOfLastWord(self, s: str) -> int:
+        n = len(s)
+        rst = 0
+        for i in range(n - 1, -1, -1):
+            if rst == 0 and s[i] == ' ':
+                continue
+            if s[i] != ' ':
+                rst += 1
+            if rst > 0 and s[i] == ' ':
+                break
+        return rst
+
 ```
 
 ### 二分
@@ -475,32 +554,6 @@ class Solution:
 ```
 
 ### 自定义比较函数
-
-[80. 删除有序数组中的重复项 II](https://leetcode.cn/problems/remove-duplicates-from-sorted-array-ii/description/?envType=study-plan-v2&envId=top-interview-150)
-
-```python
-class Solution:
-    # 快慢指针
-    def removeDuplicates(self, nums: List[int]) -> int:
-        n = len(nums)
-        slow = 2
-        fast = 2
-        while fast < n:
-            if nums[slow - 2] != nums[fast]:
-                nums[slow] = nums[fast]
-                slow += 1
-            fast += 1
-        return slow
-
-    def removeDuplicates2(self, nums: List[int]) -> int:
-        left = 0
-        for num in nums:
-            # 因为有序，第三个数要么比left-2大，要么相等
-            if left < 2 or num > nums[left - 2]:
-                nums[left] = num
-                left += 1
-        return left
-```
 
 [剑指 Offer 45. 把数组排成最小的数](https://leetcode.cn/problems/ba-shu-zu-pai-cheng-zui-xiao-de-shu-lcof/)
 
@@ -1491,6 +1544,154 @@ class Solution:
 
 ## 数组
 
+[80. 删除有序数组中的重复项 II](https://leetcode.cn/problems/remove-duplicates-from-sorted-array-ii/description/?envType=study-plan-v2&envId=top-interview-150)
+
+```python
+class Solution:
+    # 快慢指针
+    def removeDuplicates(self, nums: List[int]) -> int:
+        n = len(nums)
+        slow = 2
+        fast = 2
+        while fast < n:
+            if nums[slow - 2] != nums[fast]:
+                nums[slow] = nums[fast]
+                slow += 1
+            fast += 1
+        return slow
+
+    def removeDuplicates2(self, nums: List[int]) -> int:
+        left = 0
+        for num in nums:
+            # 因为有序，第三个数要么比left-2大，要么相等
+            if left < 2 or num > nums[left - 2]:
+                nums[left] = num
+                left += 1
+        return left
+```
+
+[55. 跳跃游戏](https://leetcode.cn/problems/jump-game/description/?envType=study-plan-v2&envId=top-interview-150)
+```python
+class Solution:
+    # 滑动窗口
+    def canJump(self, nums: List[int]) -> bool:
+        n = len(nums)
+        right = 0
+        left = 0
+        while left <= right and right < n:
+            if nums[left] + left > right:
+                right = nums[left] + left
+            left += 1
+        return right >= n - 1
+    # 模拟
+    def canJump2(self, nums: List[int]) -> bool:
+        n = len(nums)
+        rst = [False] * (n + 1)
+        rst[0] = True
+        for i in range(n):
+            if not rst[i]:
+                continue
+            num = nums[i]
+            for j in range(i + 1, min(i + num + 1, n)):
+                rst[j] = True
+        return rst[n - 1]
+```
+[跳跃游戏2](https://leetcode.cn/problems/jump-game-ii/description/?envType=study-plan-v2&envId=top-interview-150)
+```python
+class Solution:
+    def jump(self, nums: List[int]) -> int:
+        n = len(nums)
+        left = 0
+        right = 0
+        end = 0 # 当前能跳到的最远处
+        rst = 0
+        while left < n - 1:
+            if nums[left] + left >= right:
+                right = nums[left] + left
+            if left == end:
+                rst += 1
+                end = right
+            left += 1
+        return rst 
+    def jump2(self, nums: List[int]) -> int:
+        n = len(nums)
+        dp = [1001] * (n + 1)
+        dp[0] = 0
+        for i in range(1, n):
+            tmp = dp[i]
+            for j in range(i): # dp 复杂度太高
+                if nums[j] + j >= i:
+                    tmp = min(tmp, dp[j] + 1)
+            dp[i] = tmp
+        return dp[n - 1] 
+```
+
+[274. H 指数](https://leetcode.cn/problems/h-index/description/?envType=study-plan-v2&envId=top-interview-150)
+```python
+class Solution:
+    def hIndex(self, citations: List[int]) -> int:
+        n = len(citations)
+        citations.sort(reverse = True) # 先反向排序
+        h = 0
+        i = 0
+        while i < n and citations[i] > h: # 再一步一步累加 h
+            h += 1
+            i += 1
+        return h
+```
+[380. O(1) 时间插入、删除和获取随机元素](https://leetcode.cn/problems/insert-delete-getrandom-o1/description/?envType=study-plan-v2&envId=top-interview-150)
+```python
+import random
+class RandomizedSet:
+
+    def __init__(self):
+        self.array = []
+        self.dict = {}
+
+
+    def insert(self, val: int) -> bool:
+        if val in self.dict:
+            return False
+        else:
+            self.dict[val] = len(self.array)
+            self.array.append(val)
+            return True
+
+
+    def remove(self, val: int) -> bool:
+        if val not in self.dict:
+            return False
+        else:
+            index = self.dict[val]
+            self.array[index] = self.array[-1] # 要删除的元素交换到尾部，更新index
+            self.dict[self.array[index]] = index
+            self.array.pop()
+            del self.dict[val]
+            return True
+
+    def getRandom(self) -> int:
+        n = len(self.array)
+        i = random.randint(0, n - 1)
+        return self.array[i]
+```
+[238. 除自身以外数组的乘积](https://leetcode.cn/problems/product-of-array-except-self/description/?envType=study-plan-v2&envId=top-interview-150)
+```python
+class Solution:
+    def productExceptSelf(self, nums: List[int]) -> List[int]:
+        n = len(nums)
+        left = [1] * (n + 1)
+        right = [1] * (n + 1)
+        for i in range(1, n):
+            left[i] = left[i - 1] * nums[i - 1] # 左侧
+        for i in range(n - 2, -1, -1):
+            right[i] = right[i + 1] * nums[i + 1]
+        
+        for i in range(n):
+            nums[i] = left[i] * right[i]
+        
+        return nums
+```
+
 [27. 移除元素](https://leetcode.cn/problems/remove-element/description/?envType=study-plan-v2&envId=top-interview-150)
 ```python
 from typing import List
@@ -1501,6 +1702,30 @@ class Solution:
         for i in range(n):
             if nums[i] != val:
                 nums[left] = nums[i]
+                left += 1
+        return left
+```
+[80. 删除有序数组中的重复项 II](https://leetcode.cn/problems/remove-duplicates-from-sorted-array-ii/description/?envType=study-plan-v2&envId=top-interview-150)
+
+```python
+class Solution:
+    def removeDuplicates(self, nums: List[int]) -> int:
+        n = len(nums)
+        slow = 2
+        fast = 2
+        while fast < n:
+            if nums[slow - 2] != nums[fast]:
+                nums[slow] = nums[fast]
+                slow += 1
+            fast += 1
+        return slow
+
+    def removeDuplicates2(self, nums: List[int]) -> int:
+        left = 0
+        for num in nums:
+            # 因为有序，第三个数要么比left-2大，要么相等
+            if left < 2 or num > nums[left - 2]:
+                nums[left] = num
                 left += 1
         return left
 ```
@@ -1573,7 +1798,7 @@ class Solution:
 ```
 
 ### 数组轮转
-
+[轮转](https://leetcode.cn/problems/rotate-array/description/?envType=study-plan-v2&envId=top-interview-150)
 ```python
 from typing import List
 class Solution:
@@ -2347,6 +2572,31 @@ class Solution:
 
 ### 贪心
 
+[134. 加油站](https://leetcode.cn/problems/gas-station/description/?envType=study-plan-v2&envId=top-interview-150)
+
+```python
+class Solution:
+    def canCompleteCircuit(self, gas: List[int], cost: List[int]) -> int:
+        n = len(gas)
+        i = 0
+        while i < n:
+            sum_gas = 0
+            sum_cos = 0
+            cnt = 0
+            while cnt < n:
+                j = (i + cnt) % n
+                sum_gas += gas[j]
+                sum_cos += cost[j]
+                if sum_gas < sum_cos:
+                    break
+                cnt += 1 
+            if cnt == n: #跳了n轮
+                return i
+            else:
+                i = i + cnt + 1 #跳过
+        return -1
+```
+
 [1903. 字符串中的最大奇数](https://leetcode.cn/problems/largest-odd-number-in-string/), 最优解的特性是， 以奇数结尾的最长的串
 
 ```python
@@ -3036,6 +3286,85 @@ class SolutionSimulate:
 ```
 
 ## Hard
+
+### [42. 接雨水](https://leetcode.cn/problems/trapping-rain-water/description/?envType=study-plan-v2&envId=top-interview-150)
+
+给定 n 个非负整数表示每个宽度为 1 的柱子的高度图，计算按此排列的柱子，下雨之后能接多少雨水。
+
+示例 1：
+输入：height = [0,1,0,2,1,0,1,3,2,1,2,1]
+输出：6
+解释：上面是由数组 [0,1,0,2,1,0,1,3,2,1,2,1] 表示的高度图，在这种情况下，可以接 6 个单位的雨水（蓝色部分表示雨水）。 
+
+示例 2：
+输入：height = [4,2,0,3,2,5]
+输出：9
+
+```python
+class Solution:
+    def trap(self, height: List[int]) -> int:
+        n = len(height)
+        left = [0] * (n + 1)
+        right = [0] * (n + 1)
+        left_max = 0
+        right_max = 0
+        for i in range(n):
+            left_max = max(left_max, height[i])
+            left[i] = left_max
+        for i in range(n - 1, -1, -1):
+            right_max = max(right_max, height[i])
+            right[i]  = right_max
+        
+        rst = 0
+        for i in range(n):
+            l = left[i]
+            r = right[i]
+            h = min(l, r) - height[i]
+            rst += h 
+        return rst
+```
+
+
+### [135. 分发糖果](https://leetcode.cn/problems/candy/description/?envType=study-plan-v2&envId=top-interview-150)
+
+n 个孩子站成一排。给你一个整数数组 ratings 表示每个孩子的评分。
+你需要按照以下要求，给这些孩子分发糖果：
+每个孩子至少分配到 1 个糖果。
+相邻两个孩子评分更高的孩子会获得更多的糖果。
+请你给每个孩子分发糖果，计算并返回需要准备的 最少糖果数目。
+
+示例 1：
+输入：ratings = [1,0,2]
+输出：5
+解释：你可以分别给第一个、第二个、第三个孩子分发 2、1、2 颗糖果。
+
+示例 2：
+输入：ratings = [1,2,2]
+输出：4
+解释：你可以分别给第一个、第二个、第三个孩子分发 1、2、1 颗糖果。
+     第三个孩子只得到 1 颗糖果，这满足题面中的两个条件。
+
+```python
+class Solution:
+    def candy(self, ratings: List[int]) -> int:
+        n = len(ratings)
+        left = [0] * (n + 1) # 左侧糖果个数
+        for i in range(0, n):
+            if ratings[i] > ratings[i - 1]:
+                left[i] = left[i - 1] + 1
+            else:
+                left[i] = 1
+        right = [1] * (n + 1) # 右侧糖果个数
+        rst = 0
+        for i in range(n - 1, -1, -1): 
+            if i < n -1 and ratings[i] > ratings[i + 1]:
+                right[i] = right[i + 1] + 1
+            else:
+                right[i] = 1
+            rst += max(left[i], right[i])
+        return rst
+```
+
 
 ### [串联所有单词的子串](https://leetcode-cn.com/problems/substring-with-concatenation-of-all-words/)
 
