@@ -1465,6 +1465,20 @@ class Solution:
 
 ## 数组
 
+[27. 移除元素](https://leetcode.cn/problems/remove-element/description/?envType=study-plan-v2&envId=top-interview-150)
+```python
+from typing import List
+class Solution:
+    def removeElement(self, nums: List[int], val: int) -> int:
+        n = len(nums)
+        left = 0 # 从左往右，覆盖写入
+        for i in range(n):
+            if nums[i] != val:
+                nums[left] = nums[i]
+                left += 1
+        return left
+```
+
  [学生出勤记录 I](https://leetcode.cn/problems/student-attendance-record-i/) 
  注意单词遍历的顺序性质， “连续多个”的实现， 可以在不满足连续条件的时候断开。
 
