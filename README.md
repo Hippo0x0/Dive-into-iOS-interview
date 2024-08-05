@@ -291,6 +291,20 @@ class DiningPhilosophers:
 
 ## 字符串
 
+[392. 判断子序列](https://leetcode.cn/problems/is-subsequence/description/?envType=study-plan-v2&envId=top-interview-150)
+
+```python
+class Solution:
+    def isSubsequence(self, s: str, t: str) -> bool:
+        n = len(s)
+        m = len(t)
+        i = j = 0
+        while i < n and j < m:
+            if s[i] == t[j]: # 如果有，查看下个s的字符
+                i += 1
+            j += 1
+        return i == n
+```
 [14. 最长公共前缀](https://leetcode.cn/problems/longest-common-prefix/?envType=study-plan-v2&envId=top-interview-150)
 
 ```python
@@ -306,6 +320,59 @@ class Solution:
                 else:
                     return s[:i]
         return s
+```
+
+[6. Z 字形变换](https://leetcode.cn/problems/zigzag-conversion/description/?envType=study-plan-v2&envId=top-interview-150)
+
+```python
+class Solution:
+    def convert(self, s: str, numRows: int) -> str:
+        n = len(s)
+        lines = [""] * (numRows + 1) # 每一行的字符串
+        down = True
+        index = 0
+        for i in range(n):
+            lines[index] += s[i]
+            index = index + 1 if down else index - 1
+            index %= numRows
+            if down and index == numRows - 1:
+                down = not down
+            elif (not down) and index == 0:
+                down = not down
+        return "".join(lines)
+```
+
+[28. 找出字符串中第一个匹配项的下标](https://leetcode.cn/problems/find-the-index-of-the-first-occurrence-in-a-string/description/?envType=study-plan-v2&envId=top-interview-150)
+
+```python
+class Solution:
+    def strStr(self, haystack: str, needle: str) -> int:
+        n = len(haystack)
+        m = len(needle)
+        for i in range(n):
+            if n - i >= m and haystack[i] == needle[0]:
+                rst = True
+                for j in range(m):
+                    if haystack[i + j] != needle[j]:
+                        rst = False
+                        break
+                if rst:
+                    return i
+        return -1
+```
+
+[125. 验证回文串](https://leetcode.cn/problems/valid-palindrome/description/?envType=study-plan-v2&envId=top-interview-150)
+
+```python
+class Solution:
+    def isPalindrome(self, s: str) -> bool:
+        s = [x.lower() for x in s if x.isalpha() or x.isdigit()]
+        n = len(s)
+        print(s)
+        for i in range(n // 2):
+            if s[i] != s[n - i - 1]:
+                return False
+        return True
 ```
 
 [面试题 01.09. 字符串轮转](https://leetcode.cn/problems/string-rotation-lcci/)
@@ -576,38 +643,39 @@ class Solution:
         return "".join(nums)
 ```
 
-- 排序 + 遍历 + 两侧双指针，帮助减小搜索范围 0i[j..k]n
-
 [LCR 007. 三数之和](https://leetcode.cn/problems/1fGaJU/description/)
+
+- 排序 + 遍历 + 两侧双指针，帮助减小搜索范围 0i[j..k]n
 
 ```Python
 from typing import List
-def threeSum(self, nums: List[int]) -> List[List[int]]:
-    n = len(nums)
-    nums.sort()
-    rst = []
-    for i in range(n):
-        if i > 0 and nums[i] == nums[i - 1]: # 去重
-            continue
-        k = n - 1
-        j = i + 1
-        while j < k:
-            if j > i + 1 and nums[j] == nums[j - 1]: #去重
-                j += 1
+class Solution:
+    def threeSum(self, nums: List[int]) -> List[List[int]]:
+        nums.sort()
+        n = len(nums)
+        rst = []
+        for i in range(n):
+            if i > 0 and nums[i] == nums[i - 1]:
                 continue
-            if k < n - 1 and nums[k] == nums[k + 1]: # 去重
-                k -= 1
-                continue
-            tmp = nums[i] + nums[j] + nums[k]
-            if tmp == 0: # 找到
-                rst.append([nums[i], nums[j], nums[k]])
-                j += 1
-                k -= 1
-            elif tmp < 0: # 收缩左边
-                j += 1
-            elif tmp > 0:
-                k -= 1 # 收缩右边
-    return rst
+            left = i + 1
+            right = n - 1
+            while left < right:
+                if left > i + 1 and nums[left] == nums[left - 1]:
+                    left += 1
+                    continue
+                if right < n - 1 and nums[right] == nums[right + 1]:
+                    right -= 1
+                    continue
+                tmp = nums[i] + nums[left] + nums[right]
+                if tmp == 0:
+                    rst.append([nums[i], nums[left], nums[right]])
+                    left += 1
+                    right -= 1
+                elif tmp > 0: # 收缩右边
+                    right -= 1
+                elif tmp < 0: # 收缩左边
+                    left += 1 
+        return rst
 ```
 
 [面试题 10.01. 合并排序的数组](https://leetcode.cn/problems/sorted-merge-lcci/)
@@ -1882,7 +1950,7 @@ class Solution:
 ```
 
 [顺时针打印矩阵](https://leetcode-cn.com/problems/shun-shi-zhen-da-yin-ju-zhen-lcof/)
-
+[54. 螺旋矩阵](https://leetcode.cn/problems/spiral-matrix/description/?envType=study-plan-v2&envId=top-interview-150)
 ```python
 from typing import List
 def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
@@ -1910,7 +1978,6 @@ def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
         x = x + direct[d][0] # 使用换方向后的，正确的坐标
         y = y + direct[d][1]
     return rst
-
 ## 套圈， 圈缩小的方式
 def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
     if not matrix or not matrix[0]:
@@ -1941,7 +2008,62 @@ def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
     return rst
 ```
 
+[73. 矩阵置零](https://leetcode.cn/problems/set-matrix-zeroes/description/?envType=study-plan-v2&envId=top-interview-150)
+
+```python
+class Solution:
+    def setZeroes(self, matrix: List[List[int]]) -> None:
+        """
+        Do not return anything, modify matrix in-place instead.
+        """
+        n = len(matrix)
+        m = len(matrix[0])
+        def makeZero(row, col):
+            for i in range(m):
+                if matrix[row][i] != 0:
+                    matrix[row][i] = None # 用None作为占位
+            
+            for i in range(n):
+                if matrix[i][col] != 0:
+                    matrix[i][col] = None
+        
+        for i in range(n):
+            for j in range(m):
+                if matrix[i][j] != None and matrix[i][j] == 0:
+                    makeZero(i, j)
+        
+        for i in range(n):
+            for j in range(m):
+                if not matrix[i][j]:
+                    matrix[i][j] = 0
+        
+
+```
+
 ## 矩阵
+
+[36. 有效的数独](https://leetcode.cn/problems/valid-sudoku/description/?envType=study-plan-v2&envId=top-interview-150)
+
+```python
+class Solution:
+    def isValidSudoku(self, board: List[List[str]]) -> bool:
+        m = [[[] for _ in range(3)] for _ in range(3)]
+        row = [[] for _ in range(9)]
+        col = [[] for _ in range(9)]
+        n = len(board)
+        for i in range(n):
+            for j in range(n):
+                c = board[i][j]
+                if c == ".":
+                    continue
+                if c in m[i//3][j//3] or c in row[i] or c in col[j]: # 3x3 区域内 or row or col
+                    return False
+                else:
+                    m[i//3][j//3].append(c)
+                    row[i].append(c)
+                    col[j].append(c)
+        return True
+```
 
 [240. 搜索二维矩阵 II](https://leetcode.cn/problems/search-a-2d-matrix-ii/description/)
 
@@ -2394,9 +2516,67 @@ class Solution:
 
 [无重复字符的最长子串](https://leetcode.cn/problems/longest-substring-without-repeating-characters/)
 
+给定一个字符串 s ，请你找出其中不含有重复字符的 最长 
+子串的长度。
+示例 1:
+输入: s = "abcabcbb"
+输出: 3 
+解释: 因为无重复字符的最长子串是 "abc"，所以其长度为 3。
+
+```python
+class Solution:
+    def lengthOfLongestSubstring(self, s: str) -> int:
+        rst = 0
+        n = len(s)
+        win = set() # 字符合集 window
+        left, right = 0, 0
+        while left < n:
+            while right < n and s[right] not in win: # 右侧增长
+                win.add(s[right])
+                right += 1
+            rst = max(rst, right - left)
+            win.remove(s[left]) # 左侧移除
+            left += 1
+        return rst
+```
+
 [串联所有单词的子串](https://leetcode.cn/problems/substring-with-concatenation-of-all-words/)
 
-[最小覆盖子串](https://leetcode.cn/problems/minimum-window-substring/)
+[最小覆盖子串](https://leetcode.cn/problems/minimum-window-substring/) HARD
+
+给你一个字符串 s 、一个字符串 t 。返回 s 中涵盖 t 所有字符的最小子串。如果 s 中不存在涵盖 t 所有字符的子串，则返回空字符串 "" 。
+注意：
+对于 t 中重复字符，我们寻找的子字符串中该字符数量必须不少于 t 中该字符数量。
+如果 s 中存在这样的子串，我们保证它是唯一的答案。
+
+示例 1：
+输入：s = "ADOBECODEBANC", t = "ABC"
+输出："BANC"
+解释：最小覆盖子串 "BANC" 包含来自字符串 t 的 'A'、'B' 和 'C'。
+
+```python
+import collections
+class Solution:
+    def minWindow(self, s: str, t: str) -> str:
+        count_t = collections.Counter(t)
+        count_w = collections.Counter()
+        n = len(s)
+        left = 0
+        right = 0
+        rst_left = -1
+        rst_right = n
+        while right < n:
+            count_w[s[right]] += 1
+            right += 1
+            while count_w >= count_t: # Counter是可比的
+                if right - left < rst_right - rst_left:
+                    rst_left = left
+                    rst_right = right
+                count_w[s[left]] -= 1
+                left += 1
+        return "" if rst_left < 0 else s[rst_left : rst_right]
+```
+
 
 [至多包含两个不同字符的最长子串](https://leetcode.cn/problems/longest-substring-with-at-most-two-distinct-characters/)
 
@@ -2409,6 +2589,13 @@ class Solution:
 [最小区间](https://leetcode.cn/problems/smallest-range-covering-elements-from-k-lists/)
 
 [最小窗口子序列](https://leetcode.cn/problems/minimum-window-subsequence/)
+
+
+[209. 长度最小的子数组](https://leetcode.cn/problems/minimum-size-subarray-sum/description/?envType=study-plan-v2&envId=top-interview-150)
+
+给定一个含有 n 个正整数的数组和一个正整数 target 。
+找出该数组中满足其总和大于等于 target 的长度最小的子数组
+ [numsl, numsl+1, ..., numsr-1, numsr] ，并返回其长度。如果不存在符合条件的子数组，返回 0 。
 
 ```python
 # 和大于等于 target 的最短子数组 : 滑动伸缩窗口
@@ -2428,6 +2615,44 @@ class Solution:
                 left += 1
             right += 1
         return rst if rst != float("inf") else 0
+```
+
+[167. 两数之和 II - 输入有序数组](https://leetcode.cn/problems/two-sum-ii-input-array-is-sorted/description/?envType=study-plan-v2&envId=top-interview-150)
+
+```python
+class Solution:
+    def twoSum(self, numbers: List[int], target: int) -> List[int]:
+        n = len(numbers)
+        left = 0
+        right = n - 1
+        while left < right:
+            val = numbers[left] + numbers[right] # 看起来是二分，其实是向内收缩的滑动窗口
+            if val == target:
+                return [left + 1, right + 1]
+            elif val > target:
+                right -= 1
+            elif val < target:
+                left += 1
+        return [left, right]
+```
+
+[11. 盛最多水的容器](https://leetcode.cn/problems/container-with-most-water/description/?envType=study-plan-v2&envId=top-interview-150)
+
+```python
+class Solution:
+    def maxArea(self, height: List[int]) -> int:
+        n = len(height)
+        left = 0
+        right = n - 1
+        rst = 0
+        while left < right:
+            v = (right - left) *  min(height[left], height[right])
+            rst = max(rst, v)
+            if height[left] >= height[right]:
+                right -= 1
+            else:
+                left += 1
+        return rst
 ```
 
 ### 位运算
@@ -3368,6 +3593,12 @@ class Solution:
 
 ### [串联所有单词的子串](https://leetcode-cn.com/problems/substring-with-concatenation-of-all-words/)
 
+给定一个字符串 s 和一个字符串数组 words。 words 中所有字符串 长度相同。
+s 中的 串联子串 是指一个包含  words 中所有字符串以任意顺序排列连接起来的子串。
+
+例如，如果 words = ["ab","cd","ef"]， 那么 "abcdef"， "abefcd"，"cdabef"， "cdefab"，"efabcd"， 和 "efcdab" 都是串联子串。 "acdbef" 不是串联子串，因为他不是任何 words 排列的连接。
+返回所有串联子串在 s 中的开始索引。你可以以 任意顺序 返回答案。
+
 ```Python
 import collections
 from typing import List
@@ -3376,7 +3607,7 @@ class Solution:
         wordmap = collections.Counter(words)
 
         wordlen = len(words[0])
-        allwordlen = wordlen * (len(words))  # 目标子串长度
+        allwordlen = wordlen * (len(words))  # 目标子q  1串长度
         rst = []
         n = len(s)
 
@@ -3385,7 +3616,7 @@ class Solution:
             if len(ss) != allwordlen:
                 print(ss, len(ss))
                 break
-            ss = [ss[i : i + wordlen] for i in range(0, len(ss), wordlen)]  #   切分单词
+            ss = [ss[i : i + wordlen] for i in range(0, len(ss), wordlen)]  # 切分单词
             ssmap = collections.Counter(ss)  # 计数
 
             if ssmap == wordmap: # 对比
