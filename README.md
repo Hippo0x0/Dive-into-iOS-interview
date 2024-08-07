@@ -1058,6 +1058,166 @@ class Solution:
 
 ## 树
 
+[104. 二叉树的最大深度](https://leetcode.cn/problems/maximum-depth-of-binary-tree/description/?envType=study-plan-v2&envId=top-interview-150)
+
+```python
+class Solution:
+    def maxDepth(self, root: Optional[TreeNode]) -> int:
+        if not root:
+            return 0
+        l = self.maxDepth(root.left)
+        r = self.maxDepth(root.right)
+        return max(l, r) + 1
+```
+
+[100. 相同的树](https://leetcode.cn/problems/same-tree/description/?envType=study-plan-v2&envId=top-interview-150)
+
+```python
+class Solution:
+    def isSameTree(self, p: Optional[TreeNode], q: Optional[TreeNode]) -> bool:
+        if not p and not q:
+            return True
+        if (not p and q) or (p and not q):
+            return False
+        l = self.isSameTree(p.left, q.left)
+        r = self.isSameTree(p.right, q.right)
+
+        return p.val == q.val and l and r
+```
+
+[226. 翻转二叉树](https://leetcode.cn/problems/invert-binary-tree/description/?envType=study-plan-v2&envId=top-interview-150)
+
+```python
+class Solution:
+    def invertTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
+        if not root:
+            return None
+        l = self.invertTree(root.left)
+        r = self.invertTree(root.right)
+        root.left = r
+        root.right = l
+        return root
+```
+
+[101. 对称二叉树](https://leetcode.cn/problems/symmetric-tree/description/?envType=study-plan-v2&envId=top-interview-150)
+
+```python
+class Solution:
+    def isSymmetric(self, root: TreeNode) -> bool:
+        def dfs(p, q):
+            if not p and not q:
+                return True
+            if (not p and q) or (not q and p):
+                return False
+            return p.val == q.val and dfs(p.left, q.right) and dfs(p.right, q.left)
+        if not root:
+            return True
+        return dfs(root.left, root.right)
+```
+
+[填充每个节点的下一个右侧节点指针 II](https://leetcode.cn/problems/populating-next-right-pointers-in-each-node-ii/description/?envType=study-plan-v2&envId=top-interview-150)
+
+```python
+class Solution:
+    def connect(self, root: 'Node') -> 'Node':
+        if not root:
+            return root
+        queue = [root]
+        while queue:
+            size = len(queue)
+            last = None
+            for i in range(size):
+                node = queue.pop(0)
+                if not last:
+                    last = node
+                else:
+                    last.next = node
+                    last = node
+                if node.left: queue.append(node.left)
+                if node.right: queue.append(node.right)
+        return root
+```
+[114. 二叉树展开为链表](https://leetcode.cn/problems/flatten-binary-tree-to-linked-list/description/?envType=study-plan-v2&envId=top-interview-150)
+
+```python
+class Solution:
+    def flatten(self, root: TreeNode) -> None:
+        nodes = []
+        def preorder(root): # 先记住顺序，再连接
+            if not root:
+                return
+            nodes.append(root)
+            if root.left: preorder(root.left)
+            if root.right: preorder(root.right)
+        preorder(root)
+        pre = None
+        for n in nodes:
+            n.left = None
+            if not pre:
+                pre = n
+            else:
+                pre.right = n
+                pre = n
+
+    def flatten2(self, root: TreeNode) -> None:
+        if not root:
+            return []
+        stack = []
+        stack.append(root)
+        pre = None
+        while stack:
+            cur = stack.pop() # 直接pop
+            if pre:
+                pre.left = None
+                pre.right = cur
+            if cur.right:
+                stack.append(cur.right) # right先压栈
+            if cur.left:
+                stack.append(cur.left)
+            pre = cur
+        
+    def flatten3(self, root: TreeNode) -> None:
+        if not root:
+            return None
+        stack = []
+        nodes = []
+        while root or stack:
+            while root:
+                nodes.append(root)
+                stack.append(root)
+                root = root.left
+            cur = stack.pop()
+            root = cur.right
+        pre = None
+        for n in nodes:
+            n.left = None
+            if not pre:
+                pre = n
+            else:
+                pre.right = n
+                pre = n
+```
+
+[129. 求根节点到叶节点数字之和](https://leetcode.cn/problems/sum-root-to-leaf-numbers/description/?envType=study-plan-v2&envId=top-interview-150)
+
+```python
+class Solution:
+    def sumNumbers(self, root: Optional[TreeNode]) -> int:
+        rst = 0
+        def dfs(root, mul):
+            if not root.left and not root.right:
+                nonlocal rst
+                rst += mul * 10 + root.val
+                return
+            if root.left:
+                dfs(root.left, mul * 10 + root.val)
+            if root.right:
+                dfs(root.right, mul * 10 + root.val)
+        dfs(root, 0)
+        return rst
+```
+
+### 树的遍历
 ```python
 # 树的遍历
 from typing import List, Optional
@@ -1101,7 +1261,17 @@ def postorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
             root = root.right
 
     return res
-
+class Solution:
+    def postorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
+        rst = []
+        def dfs(root):
+            if not root:
+                return
+            if root.left: dfs(root.left)
+            if root.right:dfs(root.right)
+            rst.append(root.val)
+        dfs(root)
+        return rst
 ## 层序遍历
 # [剑指 Offer 32 - III. 从上到下打印二叉树 III](https://leetcode.cn/problems/cong-shang-dao-xia-da-yin-er-cha-shu-iii-lcof/)
 class Solution:
@@ -1229,6 +1399,9 @@ class Solution:
 ```
 
 ### 构建树
+
+[105. 从前序与中序遍历序列构造二叉树](https://leetcode.cn/problems/construct-binary-tree-from-preorder-and-inorder-traversal/description/?envType=study-plan-v2&envId=top-interview-150)
+[106. 从中序与后序遍历序列构造二叉树](https://leetcode.cn/problems/construct-binary-tree-from-inorder-and-postorder-traversal/?envType=study-plan-v2&envId=top-interview-150)
 
 ```python
 from typing import List
@@ -2838,6 +3011,54 @@ class Solution:
 
 ### 动态规划
 
+[70. 爬楼梯](https://leetcode.cn/problems/climbing-stairs/description/?envType=study-plan-v2&envId=top-interview-150)
+
+```python
+class Solution:
+    def climbStairs(self, n: int) -> int:
+        dp0, dp1 = 1, 1
+        for i in range(2, n + 1):
+            dp1, dp0 = dp0 + dp1, dp1
+        return dp1
+```
+
+[198. 打家劫舍](https://leetcode.cn/problems/house-robber/description/?envType=study-plan-v2&envId=top-interview-150)
+
+```python
+class Solution:
+    def rob(self, nums: List[int]) -> int:
+        n = len(nums)
+        dp = [0] * (n + 1)
+        dp[1] = nums[0]
+        for i in range(1, n):
+            dp[i + 1] = max(dp[i], dp[i - 1] + nums[i])
+        return dp[n]
+```
+
+[139. 单词拆分](https://leetcode.cn/problems/word-break/?envType=study-plan-v2&envId=top-interview-150)
+
+给你一个字符串 s 和一个字符串列表 wordDict 作为字典。如果可以利用字典中出现的一个或多个单词拼接出 s 则返回 true。
+注意：不要求字典中出现的单词全部都使用，并且字典中的单词可以重复使用。
+
+示例 1：
+输入: s = "leetcode", wordDict = ["leet", "code"]
+输出: true
+解释: 返回 true 因为 "leetcode" 可以由 "leet" 和 "code" 拼接成。
+
+```python
+class Solution:
+    def wordBreak(self, s: str, wordDict: List[str]) -> bool:       
+        n = len(s)
+        dp = [False] * (n + 1)
+        dp[0] = True
+        for i in range(n):
+            for j in range(i+1, n + 1):
+                if (dp[i] and (s[i:j] in wordDict)): # 寻找是否有合适的单词
+                    dp[j] = True
+        return dp[-1]
+```
+
+
 #### 买卖股票
 
 动态规划， 当前状态是持有股票、未持有股票下的最大收益
@@ -3039,6 +3260,60 @@ class Solution:
                 d[loc] = n    # 替换掉
         return len(d)
 
+```
+
+[120. 三角形最小路径和](https://leetcode.cn/problems/triangle/description/?envType=study-plan-v2&envId=top-interview-150)
+
+```python
+class Solution:
+    def minimumTotal(self, triangle: List[List[int]]) -> int:
+        n = len(triangle)
+        dp = [ [0] * (n + 1) for _ in range(n + 1)]
+        dp[0][0] = triangle[0][0]
+        rst = float("inf")
+
+        if n == 1:
+            return dp[0][0]
+        for i in range(n):
+            for j in range(i + 1):
+                if j == 0:
+                    dp[i][j] = dp[i - 1][j] + triangle[i][j]
+                elif i == j:
+                    dp[i][j] = dp[i - 1][j - 1] + triangle[i][j]
+                else:
+                    dp[i][j] = min(dp[i - 1][j - 1], dp[i - 1][j]) + triangle[i][j]
+                if i == n - 1:
+                    rst = min(rst, dp[i][j])
+        return rst
+        # n = len(triangle)
+        # rst = float("inf")
+        # def dfs(i, j, s):
+        #     if i == n:
+        #         nonlocal rst
+        #         rst = min(rst, s)
+        #         return
+        #     nums = triangle[i]
+        #     if j < len(nums): dfs(i + 1, j, s + nums[j])
+        #     if j + 1 < len(nums): dfs(i + 1, j + 1, s + nums[j + 1])
+        # dfs(0, 0, 0)
+        # return rst
+```
+
+[64. 最小路径和](https://leetcode.cn/problems/minimum-path-sum/description/?envType=study-plan-v2&envId=top-interview-150)
+
+```python
+class Solution:
+    def minPathSum(self, grid: List[List[int]]) -> int:
+        n = len(grid)
+        m = len(grid[0])
+        dp = [[float("inf")] * (m + 1) for _ in range(n + 1)]
+        for i in range(n):
+            for j in range(m):
+                if i == 0 and j == 0:
+                    dp[i + 1][j + 1] = grid[i][j]
+                else:
+                    dp[i + 1][j + 1] = min(dp[i][j + 1], dp[i + 1][j]) + grid[i][j]
+        return dp[n][m]
 ```
 
 [剑指 Offer 48. 最长不含重复字符的子字符串](https://leetcode.cn/problems/zui-chang-bu-han-zhong-fu-zi-fu-de-zi-zi-fu-chuan-lcof/)
@@ -3255,7 +3530,6 @@ class Solution:
         n = amount
         dp = [float("inf")] * (n + 1)
         dp[0] = 0
-        
         for c in coins:
             for i in range(c, amount + 1):  # 枚举
                 dp[i] = min(dp[i], dp[i - c] + 1)  # 这里取的是min值
@@ -3511,6 +3785,30 @@ class SolutionSimulate:
 ```
 
 ## Hard
+
+### [124. 二叉树中的最大路径和](https://leetcode.cn/problems/binary-tree-maximum-path-sum/description/?envType=study-plan-v2&envId=top-interview-150)
+
+```python
+class Solution:
+    def __init__(self):
+        self.maxSum = float("-inf")
+    def maxPathSum(self, root: TreeNode) -> int:
+        def maxGain(node):
+            if not node:
+                return 0
+            # 递归计算左右子节点的最大贡献值
+            # 只有在最大贡献值大于 0 时，才会选取对应子节点
+            leftGain = max(maxGain(node.left), 0)
+            rightGain = max(maxGain(node.right), 0)
+            # 节点的最大路径和取决于该节点的值与该节点的左右子节点的最大贡献值
+            priceNewpath = node.val + leftGain + rightGain
+            # 更新答案
+            self.maxSum = max(self.maxSum, priceNewpath)
+            # 返回节点的最大贡献值
+            return node.val + max(leftGain, rightGain)
+        maxGain(root)
+        return self.maxSum
+```
 
 ### [42. 接雨水](https://leetcode.cn/problems/trapping-rain-water/description/?envType=study-plan-v2&envId=top-interview-150)
 
